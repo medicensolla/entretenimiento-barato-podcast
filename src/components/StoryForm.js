@@ -1,93 +1,108 @@
-﻿import React, { useState } from 'react';
-import EasterEgg from './EasterEgg';
-import './StoryForm.css';
+﻿import React, { useState } from "react";
+import EasterEgg from "./EasterEgg";
+import "./StoryForm.css";
 
 const SECTION_WEBHOOKS = {
-  'Me Ondie - Dilemas Morales': process.env.REACT_APP_DISCORD_ME_ONDIE_WEBHOOK_URL,
-  'Dr. Cupido - Consejos para el amor': process.env.REACT_APP_DISCORD_DR_CUPIDO_WEBHOOK_URL,
-  'Yo Opino - Opiniones Controversiales': process.env.REACT_APP_DISCORD_YO_OPINO_WEBHOOK_URL,
-  'Desde la Oficina - Historias del trabajo': process.env.REACT_APP_DISCORD_LA_OFICINA_WEBHOOK_URL,
-  'Zona Majin - Anecdotas y consultas paranormales': process.env.REACT_APP_DISCORD_LA_ZONA_MAJIN_WEBHOOK_URL
+  "Me Ondie - Dilemas Morales":
+    process.env.REACT_APP_DISCORD_ME_ONDIE_WEBHOOK_URL,
+  "Dr. Cupido - Consejos para el amor":
+    process.env.REACT_APP_DISCORD_DR_CUPIDO_WEBHOOK_URL,
+  "Yo Opino - Opiniones Controversiales":
+    process.env.REACT_APP_DISCORD_YO_OPINO_WEBHOOK_URL,
+  "Desde la Oficina - Historias del trabajo":
+    process.env.REACT_APP_DISCORD_LA_OFICINA_WEBHOOK_URL,
+  "Zona Majin - Anecdotas y consultas paranormales":
+    process.env.REACT_APP_DISCORD_LA_ZONA_MAJIN_WEBHOOK_URL,
 };
-
 
 const StoryForm = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    section: '',
-    story: '',
-    isAnonymous: false
+    name: "",
+    email: "",
+    section: "",
+    story: "",
+    isAnonymous: false,
   });
   const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   const sections = [
-    { name: 'Me Ondie - Dilemas Morales', color: '#ff0000' },
-    { name: 'Dr. Cupido - Consejos para el amor', color: '#ff00ff' },
-    { name: 'Yo Opino - Opiniones Controversiales', color: '#ffff00' },
-    { name: 'Zona Majin - Anecdotas y consultas paranormales', color: '#00ff00' },
-    { name: 'Desde la Oficina - Historias del trabajo', color: '#00ffff' }
+    { name: "Me Ondie - Dilemas Morales", color: "#ff0000" },
+    { name: "Dr. Cupido - Consejos para el amor", color: "#ff00ff" },
+    { name: "Yo Opino - Opiniones Controversiales", color: "#ffff00" },
+    {
+      name: "Zona Majin - Anecdotas y consultas paranormales",
+      color: "#00ff00",
+    },
+    { name: "Desde la Oficina - Historias del trabajo", color: "#00ffff" },
   ];
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const submitButton = e.target.querySelector('.submit-button');
+    const submitButton = e.target.querySelector(".submit-button");
     const originalText = submitButton.textContent;
-    submitButton.textContent = 'ENVIANDO...';
+    submitButton.textContent = "ENVIANDO...";
     submitButton.disabled = true;
 
     try {
-
-
       const messageLines = [
-        '**Nueva carta recibida**',
-        `Seccion: ${formData.section || 'Sin seccion'}`,
-        `Nombre: ${formData.isAnonymous ? 'Anonimo' : formData.name || 'Sin nombre'}`,
-        `Email: ${formData.isAnonymous ? 'Anonimo' : formData.email || 'Sin email'}`,
-        '',
-        formData.story
+        "**Nueva carta recibida**",
+        `Seccion: ${formData.section || "Sin seccion"}`,
+        `Nombre: ${
+          formData.isAnonymous ? "Anonimo" : formData.name || "Sin nombre"
+        }`,
+        `Email: ${
+          formData.isAnonymous ? "Anonimo" : formData.email || "Sin email"
+        }`,
+        "",
+        formData.story,
       ];
 
       const webhookUrl = SECTION_WEBHOOKS[formData.section];
 
       if (!webhookUrl) {
-        throw new Error(`No Discord webhook configured for section "${formData.section}"`);
+        throw new Error(
+          `No Discord webhook configured for section "${formData.section}"`
+        );
       }
 
       const response = await fetch(webhookUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: messageLines.join('\n')
-        })
+          content: messageLines.join("\n"),
+        }),
       });
 
       if (!response.ok) {
-        throw new Error(`Discord webhook responded with status ${response.status}`);
+        throw new Error(
+          `Discord webhook responded with status ${response.status}`
+        );
       }
 
-      alert('Historia enviada exitosamente. Gracias por compartirla.');
+      alert("Historia enviada exitosamente. Gracias por compartirla.");
       setFormData({
-        name: '',
-        email: '',
-        section: '',
-        story: '',
-        isAnonymous: false
+        name: "",
+        email: "",
+        section: "",
+        story: "",
+        isAnonymous: false,
       });
     } catch (error) {
-      console.error('Error enviando mensaje a Discord:', error);
-      alert('Error al enviar la historia. Revisa la configuracion e intenta de nuevo.');
+      console.error("Error enviando mensaje a Discord:", error);
+      alert(
+        "Error al enviar la historia. Revisa la configuracion e intenta de nuevo."
+      );
     } finally {
       submitButton.textContent = originalText;
       submitButton.disabled = false;
@@ -95,19 +110,31 @@ const StoryForm = ({ onNavigate }) => {
   };
 
   const selectedSection = sections.find((s) => s.name === formData.section);
-  const accentColor = selectedSection ? selectedSection.color : '#ffffff';
+  const accentColor = selectedSection ? selectedSection.color : "#ffffff";
 
   return (
-    <div className="tv-screen" style={{ '--accent-color': accentColor }}>
+    <div className="tv-screen" style={{ "--accent-color": accentColor }}>
       <div className="scanlines"></div>
       <div className="noise"></div>
       <div className="tv-static"></div>
 
       <div className="tv-content">
         <div className="channel-info">
-          <span className="channel-number" onClick={() => onNavigate('podcast')}>EB-TV</span>
-          <span className="channel-name" onClick={() => onNavigate('story')}>Entretenimiento Barato</span>
-          <span className="signal-strength" onClick={() => setShowEasterEgg(true)}>+-+-+-</span>
+          <span
+            className="channel-number"
+            onClick={() => onNavigate("podcast")}
+          >
+            EB-TV
+          </span>
+          <span className="channel-name" onClick={() => onNavigate("story")}>
+            Entretenimiento Barato
+          </span>
+          <span
+            className="signal-strength"
+            onClick={() => setShowEasterEgg(true)}
+          >
+            +-+-+-
+          </span>
         </div>
 
         <div className="program-info">
@@ -126,7 +153,8 @@ const StoryForm = ({ onNavigate }) => {
             >
               <option value="">Selecciona una seccion</option>
               {sections.map((section) => (
-                <option key={section.name} value={section.name}>{section.name}
+                <option key={section.name} value={section.name}>
+                  {section.name}
                 </option>
               ))}
             </select>
@@ -194,10 +222,13 @@ const StoryForm = ({ onNavigate }) => {
         </form>
 
         <div className="action-buttons">
-          <button className="action-btn" onClick={() => onNavigate('redes')}>
+          <button className="action-btn" onClick={() => onNavigate("redes")}>
             REDES
           </button>
-          <button className="action-btn" onClick={() => onNavigate('quienes-somos')}>
+          <button
+            className="action-btn"
+            onClick={() => onNavigate("quienes-somos")}
+          >
             PODCAST
           </button>
           <button className="action-btn" data-hover="PROXIMAMENTE">
@@ -206,13 +237,9 @@ const StoryForm = ({ onNavigate }) => {
         </div>
       </div>
 
-      {showEasterEgg && (
-        <EasterEgg onClose={() => setShowEasterEgg(false)} />
-      )}
+      {showEasterEgg && <EasterEgg onClose={() => setShowEasterEgg(false)} />}
     </div>
   );
 };
 
 export default StoryForm;
-
-
