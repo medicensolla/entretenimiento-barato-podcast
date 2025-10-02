@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import EasterEgg from "./EasterEgg";
 import "./StoryForm.css";
 
@@ -24,6 +24,8 @@ const StoryForm = ({ onNavigate }) => {
     isAnonymous: false,
   });
   const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
+  const [successInfo, setSuccessInfo] = useState(null);
 
   const sections = [
     { name: "Me Ondie - Dilemas Morales", color: "#ff0000" },
@@ -35,6 +37,11 @@ const StoryForm = ({ onNavigate }) => {
     },
     { name: "Desde la Oficina - Historias del trabajo", color: "#00ffff" },
   ];
+
+  const handleCloseSuccess = () => {
+    setShowSuccessScreen(false);
+    setSuccessInfo(null);
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -90,7 +97,12 @@ const StoryForm = ({ onNavigate }) => {
         );
       }
 
-      alert("Historia enviada exitosamente. Gracias por compartirla.");
+      setSuccessInfo({
+        section: formData.section,
+        isAnonymous: formData.isAnonymous,
+        name: formData.name,
+      });
+      setShowSuccessScreen(true);
       setFormData({
         name: "",
         email: "",
@@ -111,6 +123,20 @@ const StoryForm = ({ onNavigate }) => {
 
   const selectedSection = sections.find((s) => s.name === formData.section);
   const accentColor = selectedSection ? selectedSection.color : "#ffffff";
+
+  const successAccentColor =
+    successInfo && successInfo.section
+      ? sections.find((s) => s.name === successInfo.section)?.color || "#ffffff"
+      : "#ffffff";
+
+  const successViewerMessage = successInfo
+    ? successInfo.isAnonymous
+      ? "Gracias, agente anonimo."
+      : `Gracias, ${successInfo.name || "telespectador"}.`
+    : "";
+
+  const successSectionMessage =
+    successInfo?.section || "la programacion principal";
 
   return (
     <div className="tv-screen" style={{ "--accent-color": accentColor }}>
@@ -236,6 +262,34 @@ const StoryForm = ({ onNavigate }) => {
           </button>
         </div>
       </div>
+
+      {showSuccessScreen && (
+        <div
+          className="tv-success-overlay"
+          style={{ "--success-accent-color": successAccentColor }}
+        >
+          <div className="tv-success-noise"></div>
+          <div className="tv-success-bars"></div>
+          <div className="tv-success-content">
+            <p className="success-signal">TRANSMISION COMPLETADA</p>
+            <p className="success-message">{successViewerMessage}</p>
+            <p className="success-submessage">
+              Tu historia ya esta en programacion para{" "}
+              <span className="success-section-name">
+                {successSectionMessage}
+              </span>
+              .
+            </p>
+            <button
+              type="button"
+              className="success-close-button"
+              onClick={handleCloseSuccess}
+            >
+              VOLVER AL FORMULARIO
+            </button>
+          </div>
+        </div>
+      )}
 
       {showEasterEgg && <EasterEgg onClose={() => setShowEasterEgg(false)} />}
     </div>
