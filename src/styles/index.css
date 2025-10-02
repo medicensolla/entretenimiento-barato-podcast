@@ -1,0 +1,19 @@
+/* Reset y estilos base para TV Analógica */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #000;
+  color: #00ff00;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
+  background: #000;
+}

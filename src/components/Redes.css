@@ -1,0 +1,509 @@
+/* Estilos para la página de Redes Sociales */
+.redes-screen {
+  min-height: 100vh;
+  background: linear-gradient(45deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+  position: relative;
+}
+
+/* Efecto de estática de TV mejorado */
+.tv-static {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-radial-gradient(circle at 17% 32%, white, black 0.00085px);
+  animation: tv-static 5s linear infinite;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes tv-static {
+  from {
+    background-size: 100% 100%;
+  }
+  to {
+    background-size: 200% 200%;
+  }
+}
+
+/* Barras SMPTE para página de redes */
+.redes-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(
+    90deg,
+    #ff0000 0%,
+    #ff0000 20%,
+    #ffff00 20%,
+    #ffff00 40%,
+    #00ff00 40%,
+    #00ff00 60%,
+    #00ffff 60%,
+    #00ffff 80%,
+    #ff00ff 80%,
+    #ff00ff 100%
+  );
+  z-index: 5;
+}
+
+/* Estilos para el título clickeable */
+.channel-number {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 10px;
+  border: 1px solid var(--accent-color);
+  border-radius: 3px;
+  color: #ffffff;
+  text-shadow: 
+    1px 1px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.channel-number:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--accent-color);
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.channel-name {
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 
+    1px 1px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.channel-name:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent-color);
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.program-subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  color: #ffffff;
+  text-shadow: 
+    1px 1px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid #000000;
+  border-radius: 3px;
+  display: inline-block;
+  text-align: center;
+}
+
+/* Secciones */
+.redes-section,
+.presentadores-section {
+  margin-bottom: 40px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 30px;
+  border: 2px solid var(--accent-color);
+  border-radius: 10px;
+  box-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+.section-title {
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 24px;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 
+    2px 2px 0 #000000,
+    -2px -2px 0 #000000,
+    2px -2px 0 #000000,
+    -2px 2px 0 #000000,
+    0 0 10px var(--accent-color);
+  letter-spacing: 2px;
+}
+
+/* Grid de redes generales */
+.redes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.red-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid var(--accent-color);
+  border-radius: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 16px;
+  text-shadow: 
+    1px 1px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000;
+}
+
+.red-link:hover {
+  background: var(--accent-color);
+  color: #000000;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+  text-shadow: none;
+}
+
+.red-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
+  display: inline-block;
+  min-width: 30px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.red-name {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Grid de presentadores */
+.presentadores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+.presentador-card {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid var(--presentador-color);
+  border-radius: 10px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.1),
+    inset 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+.presentador-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 10px 25px rgba(255, 255, 255, 0.2),
+    0 0 20px var(--presentador-color);
+}
+
+.presentador-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--presentador-color);
+  gap: 15px;
+}
+
+.presentador-foto {
+  flex-shrink: 0;
+}
+
+.foto-presentador {
+  width: 150px;
+  height: 180px;
+  border-radius: 20px;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.2),
+    0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: contrast(1.1) saturate(1.2);
+  position: relative;
+}
+
+.foto-presentador::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.foto-presentador:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    0 15px 40px rgba(0, 0, 0, 0.2);
+  filter: 
+    contrast(1.2) 
+    saturate(1.3) 
+    brightness(1.1)
+    hue-rotate(5deg);
+}
+
+.foto-presentador:hover::before {
+  opacity: 1;
+}
+
+.foto-presentador:hover::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  animation: distortion-wave 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes distortion-wave {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+/* Efecto suave para bustos */
+.foto-presentador:hover {
+  animation: gentle-glow 1s ease-in-out;
+}
+
+@keyframes gentle-glow {
+  0% {
+    filter: 
+      contrast(1.1) 
+      saturate(1.2)
+      brightness(1.0);
+  }
+  50% {
+    filter: 
+      contrast(1.3) 
+      saturate(1.4)
+      brightness(1.15)
+      hue-rotate(8deg);
+  }
+  100% {
+    filter: 
+      contrast(1.2) 
+      saturate(1.3) 
+      brightness(1.1)
+      hue-rotate(5deg);
+  }
+}
+
+.presentador-info {
+  flex: 1;
+  text-align: center;
+}
+
+.presentador-nombre {
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 18px;
+  color: var(--presentador-color);
+  margin: 0 0 8px 0;
+  text-shadow: 
+    2px 2px 0 #000000,
+    -2px -2px 0 #000000,
+    2px -2px 0 #000000,
+    -2px 2px 0 #000000;
+  letter-spacing: 1px;
+}
+
+.presentador-rol {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--presentador-color);
+  text-shadow: 
+    1px 1px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000;
+  display: inline-block;
+  line-height: 1.3;
+}
+
+.presentador-redes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+/* Cuando hay 3 redes, centrar la tercera */
+.presentador-redes:has(.presentador-red-link:nth-child(3)) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.presentador-red-link:nth-child(3) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  max-width: 200px;
+}
+
+/* Alternativa más compatible para navegadores antiguos */
+.presentador-redes.three-items {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.presentador-redes.three-items .presentador-red-link:nth-child(3) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  max-width: 200px;
+}
+
+.presentador-red-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--presentador-color);
+  border-radius: 6px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-family: 'VCR OSD Mono', monospace;
+  font-size: 14px;
+  text-shadow: 
+    1px 1px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000;
+}
+
+.presentador-red-link:hover {
+  background: var(--presentador-color);
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+  text-shadow: none;
+}
+
+.presentador-red-link .red-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  min-width: 20px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.presentador-red-link .red-name {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .redes-container {
+    padding: 10px;
+  }
+  
+  .redes-section,
+  .presentadores-section {
+    padding: 20px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .redes-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .presentadores-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .presentador-redes {
+    grid-template-columns: 1fr;
+  }
+  
+  .presentador-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .presentador-info {
+    text-align: center;
+  }
+  
+  .foto-presentador {
+    width: 120px;
+    height: 144px;
+  }
+  
+  .red-link,
+  .presentador-red-link {
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 18px;
+  }
+  
+  .presentador-nombre {
+    font-size: 18px;
+  }
+  
+  .red-link,
+  .presentador-red-link {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,77 @@
+/* Estilos para el Easter Egg */
+.easter-egg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.easter-egg-content {
+  position: absolute;
+  left: 50px;
+  bottom: 0;
+}
+
+.easter-egg-image {
+  animation: easter-egg-slide-up 6s ease-out forwards;
+}
+
+.easter-egg-image.exit {
+  animation: easter-egg-slide-down 6s ease-in forwards;
+}
+
+.secret-image {
+  max-width: 300px;
+  max-height: 400px;
+  display: block;
+}
+
+/* Animaciones */
+@keyframes easter-egg-slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes easter-egg-slide-down {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .easter-egg-content {
+    left: 20px;
+  }
+  
+  .secret-image {
+    max-width: 250px;
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .easter-egg-content {
+    left: 10px;
+  }
+  
+  .secret-image {
+    max-width: 200px;
+    max-height: 250px;
+  }
+}
