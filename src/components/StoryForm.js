@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import EasterEgg from "./EasterEgg";
 import "./StoryForm.css";
 
@@ -15,102 +15,108 @@ const SECTION_WEBHOOKS = {
     process.env.REACT_APP_DISCORD_LA_ZONA_MAJIN_WEBHOOK_URL,
 };
 
+const SECTIONS = [
+  { name: "Me Ondie - Dilemas Morales", color: "#ff0000" },
+  { name: "Dr. Cupido - Consejos para el amor", color: "#ff00ff" },
+  { name: "Yo Opino - Opiniones Controversiales", color: "#ffff00" },
+  {
+    name: "Zona Majin - Anecdotas y consultas paranormales",
+    color: "#00ff00",
+  },
+  { name: "Desde la Oficina - Historias del trabajo", color: "#00ffff" },
+];
+
+const getInitialFormData = () => ({
+  name: "",
+  email: "",
+  section: "",
+  story: "",
+  isAnonymous: false,
+});
+
 const StoryForm = ({ onNavigate }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    section: "",
-    story: "",
-    isAnonymous: false,
-  });
+  const [formData, setFormData] = useState(getInitialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
 
-  const sections = [
-    { name: "Me Ondie - Dilemas Morales", color: "#ff0000" },
-    { name: "Dr. Cupido - Consejos para el amor", color: "#ff00ff" },
-    { name: "Yo Opino - Opiniones Controversiales", color: "#ffff00" },
-    {
-      name: "Zona Majin - Anecdotas y consultas paranormales",
-      color: "#00ff00",
-    },
-    { name: "Desde la Oficina - Historias del trabajo", color: "#00ffff" },
-  ];
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = useCallback((event) => {
+    const { name, value, type, checked } = event.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
 
-    const submitButton = e.target.querySelector(".submit-button");
-    const originalText = submitButton.textContent;
-    submitButton.textContent = "ENVIANDO...";
-    submitButton.disabled = true;
-
-    try {
-      const messageLines = [
-        "**Nueva carta recibida**",
-        `Seccion: ${formData.section || "Sin seccion"}`,
-        `Nombre: ${
-          formData.isAnonymous ? "Anonimo" : formData.name || "Sin nombre"
-        }`,
-        `Email: ${
-          formData.isAnonymous ? "Anonimo" : formData.email || "Sin email"
-        }`,
-        "",
-        formData.story,
-      ];
-
-      const webhookUrl = SECTION_WEBHOOKS[formData.section];
-
-      if (!webhookUrl) {
-        throw new Error(
-          `No Discord webhook configured for section "${formData.section}"`
-        );
+      if (isSubmitting) {
+        return;
       }
 
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: messageLines.join("\n"),
-        }),
-      });
+      setIsSubmitting(true);
 
-      if (!response.ok) {
-        throw new Error(
-          `Discord webhook responded with status ${response.status}`
+      try {
+        const { section, isAnonymous, name, email, story } = formData;
+        const webhookUrl = SECTION_WEBHOOKS[section];
+
+        if (!webhookUrl) {
+          throw new Error(`No Discord webhook configured for section "${section}"`);
+        }
+
+        const authorName = isAnonymous ? "Anonimo" : name.trim() || "Sin nombre";
+        const authorEmail = isAnonymous ? "Anonimo" : email.trim() || "Sin email";
+        const trimmedStory = story.trim();
+
+        if (!trimmedStory) {
+          window.alert("Por favor escribe tu historia antes de enviarla.");
+          return;
+        }
+
+        const messageLines = [
+          "**Nueva carta recibida**",
+          `Seccion: ${section || "Sin seccion"}`,
+          `Nombre: ${authorName}`,
+          `Email: ${authorEmail}`,
+          "",
+          trimmedStory,
+        ];
+
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: messageLines.join("\n"),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Discord webhook responded with status ${response.status}`
+          );
+        }
+
+        window.alert("Historia enviada exitosamente. Gracias por compartirla.");
+        setFormData(getInitialFormData());
+      } catch (error) {
+        console.error("Error enviando mensaje a Discord:", error);
+        window.alert(
+          "Error al enviar la historia. Revisa la configuracion e intenta de nuevo."
         );
+      } finally {
+        setIsSubmitting(false);
       }
+    },
+    [formData, isSubmitting]
+  );
 
-      alert("Historia enviada exitosamente. Gracias por compartirla.");
-      setFormData({
-        name: "",
-        email: "",
-        section: "",
-        story: "",
-        isAnonymous: false,
-      });
-    } catch (error) {
-      console.error("Error enviando mensaje a Discord:", error);
-      alert(
-        "Error al enviar la historia. Revisa la configuracion e intenta de nuevo."
-      );
-    } finally {
-      submitButton.textContent = originalText;
-      submitButton.disabled = false;
-    }
-  };
-
-  const selectedSection = sections.find((s) => s.name === formData.section);
-  const accentColor = selectedSection ? selectedSection.color : "#ffffff";
+  const accentColor = useMemo(() => {
+    const selectedSection = SECTIONS.find((section) => section.name === formData.section);
+    return selectedSection ? selectedSection.color : "#ffffff";
+  }, [formData.section]);
 
   return (
     <div className="tv-screen" style={{ "--accent-color": accentColor }}>
@@ -149,10 +155,11 @@ const StoryForm = ({ onNavigate }) => {
               value={formData.section}
               onChange={handleInputChange}
               className="form-select"
+              disabled={isSubmitting}
               required
             >
               <option value="">Selecciona una seccion</option>
-              {sections.map((section) => (
+              {SECTIONS.map((section) => (
                 <option key={section.name} value={section.name}>
                   {section.name}
                 </option>
@@ -168,6 +175,7 @@ const StoryForm = ({ onNavigate }) => {
                 checked={formData.isAnonymous}
                 onChange={handleInputChange}
                 className="checkbox-input"
+                disabled={isSubmitting}
               />
               <span className="checkbox-text">ENVIO ANONIMO</span>
             </label>
@@ -183,7 +191,8 @@ const StoryForm = ({ onNavigate }) => {
                 onChange={handleInputChange}
                 className="form-input"
                 placeholder="Tu nombre aqui..."
-                required={!formData.isAnonymous}
+                required
+                disabled={isSubmitting}
               />
             </div>
           )}
@@ -199,6 +208,7 @@ const StoryForm = ({ onNavigate }) => {
                 className="form-input"
                 placeholder="tu@email.com"
                 required
+                disabled={isSubmitting}
               />
             </div>
           )}
@@ -213,25 +223,31 @@ const StoryForm = ({ onNavigate }) => {
               placeholder="Escribe tu historia aqui..."
               rows="8"
               required
+              disabled={isSubmitting}
             />
           </div>
 
-          <button type="submit" className="submit-button">
-            ENVIAR HISTORIA
+          <button type="submit" className="submit-button" disabled={isSubmitting}>
+            {isSubmitting ? "ENVIANDO..." : "ENVIAR HISTORIA"}
           </button>
         </form>
 
         <div className="action-buttons">
-          <button className="action-btn" onClick={() => onNavigate("redes")}>
+          <button
+            className="action-btn"
+            onClick={() => onNavigate("redes")}
+            disabled={isSubmitting}
+          >
             REDES
           </button>
           <button
             className="action-btn"
             onClick={() => onNavigate("quienes-somos")}
+            disabled={isSubmitting}
           >
             PODCAST
           </button>
-          <button className="action-btn" data-hover="PROXIMAMENTE">
+          <button className="action-btn" data-hover="PROXIMAMENTE" disabled={isSubmitting}>
             TIENDA
           </button>
         </div>
